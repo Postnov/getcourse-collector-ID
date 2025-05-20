@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GetCourse ID Collector
 // @namespace    https://dev-postnov.ru/
-// @version      3.1.0
+// @version      3.2.0
 // @description  Виджет для сбора ID уроков и тренингов на страницах GetCourse с адаптивной контрастностью
 // @author       Daniil Postnov
 // @match        *://*/teach/control/stream/*
@@ -381,7 +381,7 @@
 
         copyButton.textContent = 'Скопировать ID';
         viewButton.textContent = 'Посмотреть буфер';
-        settingsButton.textContent = '⚙️ Настройки';
+        settingsButton.textContent = '';
 
         panel.appendChild(copyButton);
         panel.appendChild(viewButton);
@@ -399,7 +399,7 @@
         // ------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ -------
         function updateButtonText(button, text, isError = false) {
             button.textContent = text;
-            button.style.backgroundColor = isError ? '#f44336' : '#fff';
+            button.style.backgroundColor = isError ? '#f44336' : '#386278';
         }
 
         function getUniqueArray(arr) {
@@ -473,7 +473,7 @@
 
                         GM_setClipboard(clipboardText);
                         GM_notification('ID скопированы!', 'GetCourse Widget');
-                        updateButtonText(copyButton, 'Скопировано! ✅');
+                        updateButtonText(copyButton, 'Скопировано');
                         setTimeout(() => updateButtonText(copyButton, 'Скопировать ID'), 3000);
 
                         // Обновим тултип если он открыт
@@ -627,65 +627,99 @@
         right: 50% !important;
         transform: translateX(50%) !important;
         z-index: 999999 !important;
-        font-family: 'Roboto', sans-serif !important;
+        font-family: 'Manrope', 'Roboto', sans-serif !important;
+        width: 600px !important;
       }
 
       /* Панель виджета */
       .get-id-widget-panel {
-        width: 600px;
-        background-color: #8F93FF !important;
-        border-radius: 12px 12px !important;
+        width: auto;
+        background-color: #333D46 !important;
+        border-radius: 16px !important;
         box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2) !important;
         display: flex !important;
-        flex-wrap: wrap !important;
         align-items: center !important;
-        padding: 10px !important;
+        padding: 13px 15px !important;
+        gap: 15px !important;
+        backdrop-filter: blur(5px) !important;
+        justify-content: space-between !important;
       }
 
       /* Стили кнопок */
       .get-id-widget-panel button {
-        background-color: #fff !important;
-        color: #222 !important;
+        background-color: #386278 !important;
+        color: #fff !important;
         border: none !important;
-        border-radius: 8px !important;
-        padding: 10px 20px !important;
-        margin: 0 5px !important;
-        font-size: 14px !important;
+        border-radius: 12px !important;
+        padding: 6px 11px !important;
+        font-size: 18px !important;
+        font-weight: 500 !important;
         cursor: pointer !important;
         transition: background-color 0.2s ease !important;
-        width: 200px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 5px !important;
+        margin: 0 !important;
+        font-family: 'Manrope', 'Roboto', sans-serif !important;
+        line-height: 1.366em !important;
       }
 
-      /* Кнопка настроек */
-      .get-id-widget-panel button:nth-child(2),
-      .get-id-widget-panel button:nth-child(3) {
-        background-color: transparent !important;
-        color: #fff !important;
-        border: 1px solid #fff !important;
-        width: auto !important;
-        padding: 10px !important;
-      }
-
+      /* Дизайн кнопки копирования */
       .get-id-widget-panel button:nth-child(1) {
-        flex-grow: 1 !important;
+        width: 310px !important;
+        height: 47px !important;
+        flex-grow: 0 !important;
+      }
+      
+      /* Добавляем иконку для кнопки копирования */
+      .get-id-widget-panel button:nth-child(1)::before {
+        content: "" !important;
+        display: inline-block !important;
+        width: 24px !important;
+        height: 24px !important;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwLjUgMTAuNVY4Ljc1QzEwLjUgOC4wNTk2NCAxMS4wNTk2IDcuNSAxMS43NSA3LjVIMTUuNzVDMTYuNDQwNCA3LjUgMTcgOC4wNTk2NCAxNyA4Ljc1VjEzLjI1QzE3IDEzLjk0MDQgMTYuNDQwNCAxNC41IDE1Ljc1IDE0LjVIMTMuNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8cmVjdCB4PSI3IiB5PSIxMC41IiB3aWR0aD0iNi41IiBoZWlnaHQ9IjciIHJ4PSIxLjI1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxyZWN0IHg9IjMiIHk9IjMuNSIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiByeD0iNSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K') !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
       }
 
+      /* Дизайн кнопки просмотра буфера */
       .get-id-widget-panel button:nth-child(2) {
-        width: 160px !important;
-      }        
+        background-color: #3D505D !important;
+        width: 200px !important;
+        height: 47px !important;
+        border: none !important;
+      }
 
+      /* Дизайн кнопки настроек */
       .get-id-widget-panel button:nth-child(3) {
-        padding: 10px 15px !important;
+        background-color: #3D505D !important;
+        width: 50px !important;
+        height: 47px !important;
+        border: none !important;
+        padding: 6px 11px !important;
+        font-size: 0 !important; /* Убираем текст */
+      }
+      
+      /* Добавляем иконку настроек */
+      .get-id-widget-panel button:nth-child(3)::before {
+        content: "" !important;
+        display: inline-block !important;
+        width: 24px !important;
+        height: 24px !important;
+        background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCAyNCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik05LjY1MzA0IDE5LjEzNjZMMTAuMTc5MyAyMC4zMjAxQzEwLjQ5ODkgMjEuMDM5OCAxMS4yMTI1IDIxLjUwMzYgMTIgMjEuNTAzNlYyMS41MDM2QzEyLjc4NzUgMjEuNTAzNiAxMy41MDEyIDIxLjAzOTggMTMuODIwOCAyMC4zMjAxTDE0LjM0NyAxOS4xMzY2QzE0LjUzNDMgMTguNzE2NyAxNC44NDk0IDE4LjM2NjYgMTUuMjQ3NCAxOC4xMzYyVjE4LjEzNjJDMTUuNjQ3OCAxNy45MDUyIDE2LjExMTEgMTcuODA2OCAxNi41NzA5IDE3Ljg1NTFMMTcuODU4NSAxNy45OTIxQzE4LjY0MTUgMTguMDc1IDE5LjM5OTggMTcuNjg4NyAxOS43OTMzIDE3LjAwNjdWMTcuMDA2N0MyMC4xODcyIDE2LjMyNTEgMjAuMTQyNSAxNS40NzUzIDE5LjY3OTIgMTQuODM4OEwxOC45MTY5IDEzLjc5MTRDMTguNjQ1NSAxMy40MTU2IDE4LjUwMDQgMTIuOTYzNCAxOC41MDI3IDEyLjQ5OThWMTIuNDk5OEMxOC41MDI2IDEyLjAzNzYgMTguNjQ5IDExLjU4NzIgMTguOTIwOSAxMS4yMTMzTDE5LjY4MzIgMTAuMTY1OUMyMC4xNDY1IDkuNTI5MzYgMjAuMTkxMyA4LjY3OTU4IDE5Ljc5NzMgNy45OTc5N1Y3Ljk5Nzk3QzE5LjQwMzggNy4zMTU5NSAxOC42NDU1IDYuOTI5NzQgMTcuODYyNSA3LjAxMjU2TDE2LjU3NDkgNy4xNDk2MkMxNi4xMTUxIDcuMTk3OSAxNS42NTE4IDcuMDk5NSAxNS4yNTE0IDYuODY4NVY2Ljg2ODVDMTQuODUyNiA2LjYzNjgzIDE0LjUzNzQgNi4yODQ4OCAxNC4zNTEgNS44NjMwOEwxMy44MjA4IDQuNjc5NTlDMTMuNTAxMiAzLjk1OTg0IDEyLjc4NzUgMy40OTYwOSAxMiAzLjQ5NjA5VjMuNDk2MDlDMTEuMjEyNSAzLjQ5NjA5IDEwLjQ5ODkgMy45NTk4NCAxMC4xNzkzIDQuNjc5NTlMOS42NTMwNCA1Ljg2MzA4QzkuNDY2NiA2LjI4NDg4IDkuMTUxNDIgNi42MzY4MyA4Ljc1MjY3IDYuODY4NVY2Ljg2ODVDOC4zNTIxOSA3LjA5OTUgNy44ODg5MSA3LjE5NzkgNy40MjkxMSA3LjE0OTYyTDYuMTM3NTggNy4wMTI1NkM1LjM1NDU2IDYuOTI5NzQgNC41OTYyNSA3LjMxNTk1IDQuMjAyNzcgNy45OTc5N1Y3Ljk5Nzk3QzMuODA4NzggOC42Nzk1OCAzLjg1MzQ5IDkuNTI5MzYgNC4zMTY4MiAxMC4xNjU5TDUuMDc5MTQgMTEuMjEzM0M1LjM1MSAxMS41ODcyIDUuNDk3MzkgMTIuMDM3NiA1LjQ5NzMxIDEyLjQ5OThWMTIuNDk5OEM1LjQ5NzM5IDEyLjk2MjEgNS4zNTEgMTMuNDEyNSA1LjA3OTE0IDEzLjc4NjRMNC4zMTY4MiAxNC44MzM4QzMuODUzNDkgMTUuNDcwMyAzLjgwODc4IDE2LjMyMDEgNC4yMDI3NyAxNy4wMDE3VjE3LjAwMTdDNC41OTY2MSAxNy42ODMzIDUuMzU0NjYgMTguMDY5NCA2LjEzNzU4IDE3Ljk4NzFMNy40MjUxMSAxNy44NTAxQzcuODg0OTEgMTcuODAxOCA4LjM0ODE5IDE3LjkwMDIgOC43NDg2NiAxOC4xMzEyVjE4LjEzMTJDOS4xNDg5MSAxOC4zNjIyIDkuNDY1NTUgMTguNzE0MiA5LjY1MzA0IDE5LjEzNjZWMTkuMTM2NloiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41Ii8+CjxjaXJjbGUgY3g9IjExLjk5OTciIGN5PSIxMi40OTk3IiByPSIyLjY0ODEiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==') !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
       }
 
       /* Эффект наведения на кнопки */
       .get-id-widget-panel button:hover {
-        opacity: .85 !important;
+        opacity: .9 !important;
       }
 
       /* Тултип для отображения буфера */
       .get-id-widget-tooltip {
-        width: 600px !important;
+        width: 100% !important;
         display: none !important;
         background-color: #fff !important;
         color: #222 !important;
