@@ -294,7 +294,13 @@
             </div>
         `;
         
-        document.body.appendChild(settings);
+        // Добавляем в общий контейнер
+        const widgetContainer = document.querySelector('.get-id-widget-container');
+        if (widgetContainer) {
+            widgetContainer.appendChild(settings);
+        } else {
+            document.body.appendChild(settings);
+        }
         
         // Обработчики для кнопок
         document.getElementById('save-settings').addEventListener('click', () => {
@@ -361,6 +367,11 @@
     function addWidget() {
         if (document.querySelector('.get-id-widget-panel')) return;
 
+        // Создаем общий контейнер для всех элементов интерфейса
+        const widgetContainer = document.createElement('div');
+        widgetContainer.className = 'get-id-widget-container';
+        document.body.appendChild(widgetContainer);
+
         const panel = document.createElement('div');
         panel.className = 'get-id-widget-panel';
 
@@ -375,12 +386,12 @@
         panel.appendChild(copyButton);
         panel.appendChild(viewButton);
         panel.appendChild(settingsButton);
-        document.body.appendChild(panel);
+        widgetContainer.appendChild(panel);
 
         // Тултип для буфера
         const tooltip = document.createElement('div');
         tooltip.className = 'get-id-widget-tooltip';
-        document.body.appendChild(tooltip);
+        widgetContainer.appendChild(tooltip);
 
         // Вызываем applyStyles()
         applyStyles();
@@ -609,21 +620,26 @@
   position: relative !important;
 }
 
+      /* Общий контейнер для элементов интерфейса */
+      .get-id-widget-container {
+        position: fixed !important;
+        top: 20px !important;
+        right: 50% !important;
+        transform: translateX(50%) !important;
+        z-index: 999999 !important;
+        font-family: 'Roboto', sans-serif !important;
+      }
+
       /* Панель виджета */
       .get-id-widget-panel {
         width: 600px;
-        position: fixed !important;
-        top: 0 !important;
-        right: 20px !important;
-        z-index: 999999 !important;
+        background-color: #8F93FF !important;
+        border-radius: 12px 12px !important;
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2) !important;
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
         padding: 10px !important;
-        background-color: #8F93FF !important;
-        border-radius: 0 0 12px 12px !important;
-        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2) !important;
-        font-family: 'Roboto', sans-serif !important;
       }
 
       /* Стили кнопок */
@@ -670,19 +686,16 @@
       /* Тултип для отображения буфера */
       .get-id-widget-tooltip {
         width: 600px !important;
-        position: fixed !important;
         display: none !important;
         background-color: #fff !important;
         color: #222 !important;
-        border: 1px solid #8F93FF !important;
         padding: 0 16px !important;
         border-radius: 8px !important;
         font-size: 14px !important;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
         white-space: pre-line !important;
         z-index: 999999 !important;
-        top: 70px !important;
-        right: 20px !important;
+        margin-top: 10px !important;
       }
 
       /* Видимость тултипа */
